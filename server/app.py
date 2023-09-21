@@ -20,11 +20,33 @@ def index():
 
 @app.route('/bakeries')
 def bakeries():
-    return ''
+
+    bakeries_list = []
+    for bakery in Bakery.query.all():
+        bakery_dict = {
+            'id': bakery.id,
+            'name' : bakery.name,
+            'created_at': bakery.created_at
+        }
+        bakeries_list.append(bakery_dict)
+
+    response = make_response( jsonify(bakeries_list),200)
+    return response
 
 @app.route('/bakeries/<int:id>')
 def bakery_by_id(id):
-    return ''
+
+    bakery = Bakery.query.filter_by(id=id).first()
+
+    bakery_dict = bakery.to_dict()
+
+    response = make_response(
+        jsonify(bakery_dict),
+        200
+    )
+    response.headers["Content-Type"] = "application/json"
+
+    return response
 
 @app.route('/baked_goods/by_price')
 def baked_goods_by_price():
